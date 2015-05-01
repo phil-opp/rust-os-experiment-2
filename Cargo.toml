@@ -1,4 +1,8 @@
 [package]
-name = "rust-os-experiment-2"
+name = "rustos_experiment"
 version = "0.1.0"
 authors = ["Philipp Oppermann <dev@phil-opp.com>"]
+
+[lib]
+name = "rustos_experiment"
+crate-type = ["staticlib"]
