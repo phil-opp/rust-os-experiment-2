@@ -1,0 +1,18 @@
+{
+	"folders":
+	[
+		{
+			"path": ".",
+            "folder_exclude_patterns": ["build", "target"],
+            "follow_symlinks": true
+		}
+	],
+    "build_systems":
+    [
+        {
+            "name": "make run",
+            "shell_cmd": "make run",
+            "working_dir": "${project_path}"
+        }
+    ]
+}
