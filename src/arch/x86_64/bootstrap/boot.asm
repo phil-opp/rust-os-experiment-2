@@ -3,6 +3,8 @@ BITS 32
 
 ; the entry point to our kernel (specified in the linker)
 global start
+; the code for setting up paging (in setup_paging.asm)
+extern setup_paging
 
 
 ; Declare the multiboot 2 header. The linker will ensure that this
@@ -47,8 +49,9 @@ start:
     mov ss, ax
 
 .gdt32_ready:
-    ; now we have switched to our new gdt32
-    hlt
+    ; Now we have switched to our new gdt32. The next step is to enable 
+    ; long mode (64 bit). Therefor we must setup paging. 
+    jmp setup_paging
 
 
 ; section for read only data
@@ -64,7 +67,7 @@ gdt32_pointer:
 
 ; section for read/write data
 section .data
-; stack 
+; a small stack (only for bootstrap)
 stack_bottom:
 times 0x1000 db 0 
 stack:
