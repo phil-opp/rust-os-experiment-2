@@ -1,2 +1,4 @@
 target
+build
 Cargo.lock
+*.sublime-workspace
