@@ -108,12 +108,13 @@ enable_paging:
 
 
 section .data
-    ; page tables (P4=PML4, P3=PDPT, P2=PD, P1=PT)
-    create_page_table P4
-    create_page_table P3
-    create_page_table P2
-    %assign i 0
-    %rep p1_tables
-        create_page_table P1_%[i]
-    %assign i i+1
-    %endrep
+; page tables (P4=PML4, P3=PDPT, P2=PD, P1=PT)
+create_page_table P4
+create_page_table P3
+create_page_table P2
+
+%assign i 0
+%rep p1_tables
+    create_page_table P1_%[i]
+%assign i i+1
+%endrep
