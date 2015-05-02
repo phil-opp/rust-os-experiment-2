@@ -14,5 +14,8 @@
             "shell_cmd": "make run",
             "working_dir": "${project_path}"
         }
-    ]
+    ],
+    "syntax_override": {
+        "\\.asm$": ["NASM x86 Assembly", "Assembly x86"]
+    }
 }
