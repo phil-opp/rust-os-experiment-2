@@ -1,0 +1,24 @@
+[package]
+name = "std"
+version = "0.1.0"
+authors = ["Philipp Oppermann <dev@phil-opp.com>"]
+
+[dependencies.core]
+path = "../core"
+
+[dependencies.collections]
+path = "../collections"
+
+[dependencies.rand]
+path = "../rand"
+
+[dependencies.alloc]
+path = "../alloc"
+default-features = false
+features = ["external_crate"]
+
+[dependencies.rustc_unicode]
+path = "../rustc_unicode"
+
+[dependencies.libc]
+path = "../rlibc"
