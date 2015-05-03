@@ -2,3 +2,7 @@
 	path = rust-libs/rust
 	url = git@github.com:phil-opp/rust.git
 	branch = rust-os
+[submodule "rust-libs/rlibc"]
+	path = rust-libs/rlibc
+	url = git@github.com:phil-opp/rlibc.git
+	branch = rust-os
