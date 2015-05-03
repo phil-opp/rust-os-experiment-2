@@ -8,4 +8,4 @@ name = "rustos_experiment"
 crate-type = ["staticlib"]
 
 [dependencies.std]
-path = "rust-libs/std"
+path = "../rust-libs/std"
