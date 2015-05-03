@@ -1,0 +1,4 @@
+[submodule "rust-libs/rust"]
+	path = rust-libs/rust
+	url = git@github.com:phil-opp/rust.git
+	branch = rust-os
