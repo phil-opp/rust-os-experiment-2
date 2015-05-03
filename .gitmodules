@@ -1,8 +1,8 @@
 [submodule "rust-libs/rust"]
-	path = rust-libs/rust
+	path = src/rust-libs/rust
 	url = git@github.com:phil-opp/rust.git
 	branch = rust-os
 [submodule "rust-libs/rlibc"]
-	path = rust-libs/rlibc
+	path = src/rust-libs/rlibc
 	url = git@github.com:phil-opp/rlibc.git
 	branch = rust-os

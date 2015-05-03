@@ -9,7 +9,7 @@ external_funcs = []
 external_crate = ["external"]
 
 [target.x86_64-unknown-linux-gnu.dependencies.external]
-path = "../../src/arch/x86_64/allocator"
+path = "../../arch/x86_64/allocator"
 optional = true
 
 [dependencies.core]
