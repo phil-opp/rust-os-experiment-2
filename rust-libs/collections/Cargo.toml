@@ -1,0 +1,15 @@
+[package]
+name = "collections"
+version = "0.1.0"
+authors = ["Philipp Oppermann <dev@phil-opp.com>"]
+
+[dependencies.core]
+path = "../core"
+
+[dependencies.rustc_unicode]
+path = "../rustc_unicode"
+
+[dependencies.alloc]
+path = "../alloc"
+default-features = false
+features = ["external_crate"]
