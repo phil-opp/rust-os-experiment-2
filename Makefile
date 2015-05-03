@@ -43,7 +43,7 @@ $(rustos): src/arch/$(arch)/linker.ld cargo $(object_files)
 	@ld -T $< $(object_files) $(cargo_lib) -o $@
 
 cargo: 
-	@$(cargo_command) 
+	@cd src/main; $(cargo_command)
 
 # compile assembly files
 build/arch/%.o: src/arch/$(arch)/%.asm
