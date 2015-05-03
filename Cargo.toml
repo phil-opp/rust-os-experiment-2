@@ -7,5 +7,5 @@ authors = ["Philipp Oppermann <dev@phil-opp.com>"]
 name = "rustos_experiment"
 crate-type = ["staticlib"]
 
-[dependencies]
-rlibc = "*"
+[dependencies.std]
+path = "rust-libs/std"

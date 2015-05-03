@@ -1,7 +1,4 @@
-#![feature(no_std, lang_items)]
-#![no_std]
-
-extern crate rlibc;
+#![feature(lang_items)]
 
 pub mod unimplemented_functions;
 
