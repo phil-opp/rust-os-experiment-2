@@ -1,8 +1,9 @@
-#![feature(no_std)]
+#![feature(no_std, lang_items)]
 #![no_std]
 
 extern crate rlibc;
-extern crate unimplemented_functions;
+
+pub mod unimplemented_functions;
 
 #[no_mangle]
 pub extern fn main() {

@@ -1,6 +1,3 @@
-#![feature(no_std)]
-#[no_std]
-
 fn unimplemented() {
     loop {}
 }

@@ -7,8 +7,5 @@ authors = ["Philipp Oppermann <dev@phil-opp.com>"]
 name = "rustos_experiment"
 crate-type = ["staticlib"]
 
-[dependencies.unimplemented_functions]
-path = "lib/unimplemented_functions"
-
 [dependencies]
 rlibc = "*"
