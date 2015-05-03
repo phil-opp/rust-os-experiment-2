@@ -1,21 +1,33 @@
 {
+	"build_systems":
+	[
+		{
+			"name": "make run",
+			"shell_cmd": "make run",
+			"working_dir": "${project_path}"
+		}
+	],
 	"folders":
 	[
 		{
-			"path": ".",
-            "folder_exclude_patterns": ["build", "target", "rust-libs/rust/*"],
-            "follow_symlinks": true
+			"folder_exclude_patterns":
+			[
+				"build",
+				"target",
+				"src/rust-libs/rust/*"
+			],
+			"path": "."
+		},
+		{
+			"path": "src"
 		}
 	],
-    "build_systems":
-    [
-        {
-            "name": "make run",
-            "shell_cmd": "make run",
-            "working_dir": "${project_path}"
-        }
-    ],
-    "syntax_override": {
-        "\\.asm$": ["NASM x86 Assembly", "Assembly x86"]
-    }
+	"syntax_override":
+	{
+		"\\.asm$":
+		[
+			"NASM x86 Assembly",
+			"Assembly x86"
+		]
+	}
 }
