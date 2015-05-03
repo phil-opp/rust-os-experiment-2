@@ -3,7 +3,7 @@
 	[
 		{
 			"path": ".",
-            "folder_exclude_patterns": ["build", "target"],
+            "folder_exclude_patterns": ["build", "target", "rust-libs/rust/*"],
             "follow_symlinks": true
 		}
 	],
