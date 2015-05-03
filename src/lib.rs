@@ -1,5 +1,5 @@
 #![feature(no_std)]
-#[no_std]
+#![no_std]
 
 extern crate rlibc;
 extern crate unimplemented_functions;

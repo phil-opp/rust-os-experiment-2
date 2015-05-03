@@ -5,6 +5,10 @@ fn unimplemented() {
     loop {}
 }
 
+#[lang = "stack_exhausted"] extern fn stack_exhausted() {unimplemented()}
+#[lang = "eh_personality"] extern fn eh_personality() {unimplemented()}
+#[lang = "panic_fmt"] fn panic_fmt() -> ! {unimplemented(); loop{}}
+
 
 #[no_mangle] pub extern fn __ctype_b_loc() {unimplemented()}
 #[no_mangle] pub extern fn __errno_location() {unimplemented()}
