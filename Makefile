@@ -26,7 +26,7 @@ release: iso
 
 clean: 
 	-@rm -r build 2> /dev/null || true
-	-@rm -r target 2> /dev/null || true
+	@cd src/main; cargo clean
 
 # create the rustos iso
 iso: $(rustos) $(grub_cfg)
