@@ -8,7 +8,7 @@ assembly := $(wildcard src/arch/$(arch)/*.asm) $(wildcard src/arch/$(arch)/*/*.a
 object_files := $(patsubst src/arch/$(arch)/%.asm, build/arch/%.o, $(assembly))
 
 # the name of the produced rust library
-cargo_lib = target/$(debug)/$(shell ls target/$(debug) | grep librustos | head -1)
+cargo_lib = src/main/target/$(debug)/$(shell ls src/main/target/$(debug) | grep librustos | head -1)
 rustos := build/isofiles/boot/rustos.bin
 grub_cfg := build/isofiles/boot/grub/grub.cfg
 iso := build/rustos.iso
