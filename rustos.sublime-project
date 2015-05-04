@@ -10,6 +10,7 @@
 	"folders":
 	[
 		{
+			"file_exclude_patterns": ["*.rlib"],
 			"folder_exclude_patterns":
 			[
 				"build",
@@ -17,9 +18,6 @@
 				"src/rust-libs/rust/*"
 			],
 			"path": "."
-		},
-		{
-			"path": "src"
 		}
 	],
 	"syntax_override":
