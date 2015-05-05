@@ -20,6 +20,9 @@ build: iso
 run: build
 	@qemu-system-$(arch) -hda $(iso)
 
+release-run: release
+	@qemu-system-$(arch) -hda $(iso)
+
 release: cargo_command = cargo build --release
 release: debug = release
 release: iso
