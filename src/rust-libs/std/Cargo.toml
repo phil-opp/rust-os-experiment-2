@@ -22,6 +22,3 @@ path = "../rustc_unicode"
 
 [dependencies.libc]
 path = "../rlibc"
-
-[dependencies.os]
-path = "../../os"
