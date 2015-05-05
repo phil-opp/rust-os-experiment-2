@@ -1,0 +1,7 @@
+[package]
+name = "os"
+version = "0.1.0"
+authors = ["Philipp Oppermann <dev@phil-opp.com>"]
+
+[dependencies.std]
+path = "../rust-libs/std"
