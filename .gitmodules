@@ -6,3 +6,7 @@
 	path = src/rust-libs/rlibc
 	url = git@github.com:phil-opp/rlibc.git
 	branch = rust-os
+[submodule "src/rust-libs/bitflags"]
+	path = src/rust-libs/bitflags
+	url = git@github.com:phil-opp/bitflags.git
+	branch = rust-os
