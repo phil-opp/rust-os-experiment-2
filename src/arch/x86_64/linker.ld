@@ -51,6 +51,7 @@ SECTIONS {
     . += kernel_stack_size;
     kernel_stack_top = .;
 
-    kernel_end = .;
+    . = ALIGN(0x1000);
+    kernel_end_symbol_table_entry = .;
 
 }
