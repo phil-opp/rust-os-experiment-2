@@ -11,5 +11,3 @@ path = "../rustc_unicode"
 
 [dependencies.alloc]
 path = "../alloc"
-default-features = false
-features = ["external_crate"]

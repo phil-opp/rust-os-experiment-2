@@ -14,8 +14,6 @@ path = "../rand"
 
 [dependencies.alloc]
 path = "../alloc"
-default-features = false
-features = ["external_crate"]
 
 [dependencies.rustc_unicode]
 path = "../rustc_unicode"
