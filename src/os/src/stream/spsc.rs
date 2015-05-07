@@ -9,16 +9,20 @@ const IDLE: usize = 0;          // subscriber idle (sender has ownership)
 const WORKING: usize = 1;       // subscriber working
 const STREAM_CLOSED: usize = 2; // sender closed stream
 
-pub struct SpscSender<T, S> {
+pub struct SpscSender<T, S> where 
+    S: Subscriber<T>, S: 'static + Send, T: 'static + Send
+{
     subscriber: Unique<SubscriberLink<T, S>>
 }
 
-impl<T, S> SpscSender<T, S> where S: Subscriber<T> {
+impl<T, S> SpscSender<T, S> where 
+    S: Subscriber<T>, S: 'static + Send, T: 'static + Send
+{
     pub fn new(subscriber: S) -> SpscSender<T, S> {
         unsafe {
             SpscSender {
                 subscriber: Unique::new(into_raw(Box::new(
-                    SubscriberLink{
+                    SubscriberLink {
                         queue: Queue::new(0),   // unlimited cache
                         status: AtomicUsize::new(IDLE),
                         subscriber: subscriber,
@@ -28,7 +32,9 @@ impl<T, S> SpscSender<T, S> where S: Subscriber<T> {
     }
 }
 
-impl<T, S> Sender<T> for SpscSender<T, S> where S: Subscriber<T> {
+impl<T, S> Sender<T> for SpscSender<T, S> where 
+    S: Subscriber<T> + 'static + Send, T: 'static + Send
+{
     fn send(&self, value: T) {
         unsafe{ self.subscriber.get().new_value(value) };
     }
@@ -36,7 +42,9 @@ impl<T, S> Sender<T> for SpscSender<T, S> where S: Subscriber<T> {
     fn close(self) {} // stream will be closed on drop
 }
 
-impl<T, S> Drop for SpscSender<T, S> where S: Subscriber<T> {
+impl<T, S> Drop for SpscSender<T, S> where 
+    S: Subscriber<T> + 'static + Send, T: 'static + Send
+{
     fn drop(&mut self) {
         unsafe{ self.subscriber.get().close() };
     }
@@ -48,7 +56,9 @@ struct SubscriberLink<T, S> {
     subscriber: S,
 }
 
-impl<T, S> SubscriberLink<T, S> where S: Subscriber<T> {
+impl<T, S> SubscriberLink<T, S> where 
+    S: Subscriber<T> + 'static + Send, T: 'static + Send
+{
     fn new_value(&self, value: T) {
         self.queue.push(value);
         self.notify();
