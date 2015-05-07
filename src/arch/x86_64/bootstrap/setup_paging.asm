@@ -29,6 +29,7 @@ setup_paging:
     call fill_p1_tables
     call unmap_null_page
     call recursive_map
+    call map_page_frame_stack_tables
     call enable_paging
     ret                     ; to boot.asm
 
@@ -83,6 +84,11 @@ recursive_map:
     mov [P4 + 511*8], eax
     ret
 
+; map the page tables required for the page frame stack
+map_page_frame_stack_tables:
+    link_page_table_entry P3, 1, page_frame_stack_P2
+    link_page_table_entry page_frame_stack_P2, 0, page_frame_stack_P1
+
 enable_paging:
     ; load P4 to cr3 register (cpu uses this to access the first page table)
     mov eax, P4
@@ -118,3 +124,6 @@ create_page_table P2
     create_page_table P1_%[i]
 %assign i i+1
 %endrep
+
+create_page_table page_frame_stack_P2;
+create_page_table page_frame_stack_P1;
