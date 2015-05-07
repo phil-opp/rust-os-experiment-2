@@ -5,3 +5,6 @@ authors = ["Philipp Oppermann <dev@phil-opp.com>"]
 
 [dependencies.std]
 path = "../rust-libs/std"
+
+[dependencies.bitflags]
+path = "../rust-libs/bitflags"
