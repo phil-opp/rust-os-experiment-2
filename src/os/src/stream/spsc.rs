@@ -32,6 +32,14 @@ impl<T, S> SpscSender<T, S> where
     }
 }
 
+impl<T, f> SpscSender<T, FnSubscriber<f>> where 
+    T: 'static + Send, f: FnMut(T) + Send
+{
+    pub fn on_value(on_value: f) -> SpscSender<T, FnSubscriber<f>> {
+        Self::new(FnSubscriber(on_value))
+    }
+}
+
 impl<T, S> Sender<T> for SpscSender<T, S> where 
     S: Subscriber<T> + 'static + Send, T: 'static + Send
 {
@@ -129,5 +137,12 @@ impl<T, S> SubscriberLink<T, S> where
             self.subscriber.on_value(value);
         }                        
     }
+}
 
+pub struct FnSubscriber<f>(f);
+
+impl<T, f> Subscriber<T> for FnSubscriber<f> where f: FnMut(T) {
+    fn on_value(&mut self, value: T) {(self.0)(value)}
+
+    fn on_close(self) {println!("closed")}
 }
