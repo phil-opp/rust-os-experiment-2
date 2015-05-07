@@ -33,7 +33,11 @@ impl<T, S> Sender<T> for SpscSender<T, S> where S: Subscriber<T> {
         unsafe{ self.subscriber.get().new_value(value) };
     }
 
-    fn close(self) {
+    fn close(self) {} // stream will be closed on drop
+}
+
+impl<T, S> Drop for SpscSender<T, S> where S: Subscriber<T> {
+    fn drop(&mut self) {
         unsafe{ self.subscriber.get().close() };
     }
 }
@@ -108,7 +112,7 @@ impl<T, S> SubscriberLink<T, S> where S: Subscriber<T> {
             _ => unreachable!()
         }
     }
-    
+
     // unsafe because there must be only one popper at any time
     unsafe fn pop_values(&mut self) {
         while let Some(value) = self.queue.pop() {
