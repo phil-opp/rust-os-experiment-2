@@ -9,3 +9,6 @@ crate-type = ["staticlib"]
 
 [dependencies.std]
 path = "../rust-libs/std"
+
+[dependencies.os]
+path = "../os"
