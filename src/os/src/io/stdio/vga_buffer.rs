@@ -46,7 +46,7 @@ struct Char {
 
 static WRITER: Writer = Writer {
     position: ATOMIC_USIZE_INIT,
-    color_code: ATOMIC_USIZE_INIT, 
+    color_code: ATOMIC_USIZE_INIT,
 };
 
 struct Buffer {
@@ -87,7 +87,7 @@ impl Writer {
             let old_position = self.position.load(Relaxed);
             let pos = old_position % buffer_size;
             let new_position = (pos / BUFFER_WIDTH + 1) * BUFFER_WIDTH;
-            let old = self.position.compare_and_swap(old_position, new_position, 
+            let old = self.position.compare_and_swap(old_position, new_position,
                 Relaxed);
             if old == old_position {
                 return Ok(());
@@ -117,7 +117,7 @@ pub fn set_color(foreground: Color, background: Color) {
 pub fn clear_screen() {
     let color_code = WRITER.color_code.load(Relaxed);
     let c = Char {
-        ascii_character: ' ' as u8, 
+        ascii_character: ' ' as u8,
         color_code: VgaColorCode(color_code as u8),
     };
     unsafe {
@@ -127,4 +127,8 @@ pub fn clear_screen() {
 
 pub fn write(args: Arguments) -> Result {
     WriterRef(&WRITER).write_fmt(args)
+}
+
+pub fn write_str(msg: &str) -> Result {
+    WriterRef(&WRITER).write_str(msg)
 }
