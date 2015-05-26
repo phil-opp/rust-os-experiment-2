@@ -1,23 +1,15 @@
-use stream::SpscSender;
+use io::stdio::Stdout;
 use std::boxed::into_raw;
 use std::cell::RefCell;
 use std::fmt::{Write, Result};
 
 pub struct ThreadLocalData {
-    pub stdout: Box<Write>,
-}
-
-struct Dummy;
-
-impl Write for Dummy {
-    fn write_str(&mut self, _msg: &str) -> Result {
-        Ok(())
-    }
+    pub stdout: Option<Stdout>,
 }
 
 pub fn init() {
     let thread_local = RefCell::new(ThreadLocalData {
-        stdout: Box::new(Dummy),
+        stdout: None,
     });
 
     unsafe {
