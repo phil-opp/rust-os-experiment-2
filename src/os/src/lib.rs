@@ -15,10 +15,3 @@ mod thread;
 pub unsafe fn init(multiboot: init::MultibootHeader) {
     init::init(multiboot);
 }
-
-#[lang = "panic_fmt"]
-extern fn panic_fmt(msg: fmt::Arguments, file: &'static str, line: u32) -> ! {
-    //set_color(Color::White, Color::Red);
-    println!("\n\nPANIC");
-    loop {}
-}
