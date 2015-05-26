@@ -12,7 +12,7 @@ pub mod allocator;
 mod init;
 mod thread;
 
-pub fn init(multiboot: init::MultibootHeader) {
+pub unsafe fn init(multiboot: init::MultibootHeader) {
     init::init(multiboot);
 }
 

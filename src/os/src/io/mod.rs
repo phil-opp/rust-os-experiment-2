@@ -1,5 +1,5 @@
 pub mod stdio;
 
-pub fn init() {
+pub unsafe fn init() {
     stdio::init();
 }

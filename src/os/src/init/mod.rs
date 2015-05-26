@@ -6,8 +6,8 @@ use thread;
 
 mod multiboot;
 
-pub fn init(multiboot: MultibootHeader) {
-    io::init();
+pub unsafe fn init(multiboot: MultibootHeader) {
     allocator::init(multiboot);
     thread::init();
+    io::init();
 }

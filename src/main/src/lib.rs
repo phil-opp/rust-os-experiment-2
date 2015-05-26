@@ -8,7 +8,7 @@ pub mod unimplemented_functions;
 
 #[no_mangle]
 pub extern fn main(multiboot: os::MultibootHeader) {
-    os::init(multiboot);
+    unsafe{os::init(multiboot)};
 
     println!("Hello World!");
 
