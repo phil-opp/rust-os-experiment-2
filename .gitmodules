@@ -1,12 +1,12 @@
 [submodule "rust-libs/rust"]
 	path = src/rust-libs/rust
-	url = git@github.com:phil-opp/rust.git
+	url = https://github.com/phil-opp/rust.git
 	branch = rust-os
 [submodule "rust-libs/rlibc"]
 	path = src/rust-libs/rlibc
-	url = git@github.com:phil-opp/rlibc.git
+	url = https://github.com/phil-opp/rlibc.git
 	branch = rust-os
 [submodule "src/rust-libs/bitflags"]
 	path = src/rust-libs/bitflags
-	url = git@github.com:phil-opp/bitflags.git
+	url = https://github.com/phil-opp/bitflags.git
 	branch = rust-os
