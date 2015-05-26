@@ -9,9 +9,9 @@ global setup_paging
 
 ; declare page table %1
 %macro create_page_table 1
-    align 0x1000
+    align 4096
     %1:
-    times 0x1000 db 0
+    times 4096 db 0
 %endmacro
 
 ; link entry %2 of page table %1 to page table %3
@@ -65,7 +65,7 @@ fill_p1_table:
     mov dword [edi], eax        ; map current entry to address in eax
     mov dword [edi + 4], 0      ; higher bits of the address are 0
     add edi, 8                  ; current entry <- next entry
-    add eax, 0x1000             ; current address <- next address (current+4kB)
+    add eax, 4096               ; current address <- next address (current+4kB)
     sub ecx, 1                  ; decrement loop variable
     jnz .loop
 .done:

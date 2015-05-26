@@ -64,7 +64,7 @@ setup_SSE:
 
 remap_PIC:
     in al, 0x21                   ; save pic1 mask
-    mov cl, al    
+    mov cl, al
     in al, 0xA1                   ; save pic2 mask
     mov ch, al
 
@@ -74,8 +74,8 @@ remap_PIC:
 
     mov al, 0x20
     out 0x21, al                ; set vector offset of pic1 to 0x20
-    mov al, 0x28           
-    out 0xA1, al                ; set vector offset of pic2 to 0x28           
+    mov al, 0x28
+    out 0xA1, al                ; set vector offset of pic2 to 0x28
 
     mov al, 4
     out 0x21, al                   ; tell pic1 that there is a slave PIC at IRQ2 (0000 0100)
@@ -95,11 +95,11 @@ remap_PIC:
 
 reprogram_timer:
     mov rcx, 1193180/100        ; divisor (100 Hz)
-    
+
     mov al, 0x36
     out 0x43, al                ; set channel 0 data register + mode bits
 
-    mov al, cl 
+    mov al, cl
     out 0x40, al                ; set low divisor byte
 
     mov al, ch
@@ -131,7 +131,7 @@ init_fs_and_gs:
     ret
 
 section .data
-align 0x1000
+align 4096
 fs_struct:
     times 0x1000 db 0
 gs_struct:
