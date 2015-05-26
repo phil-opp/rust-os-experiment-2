@@ -18,8 +18,7 @@ pub unsafe fn init(multiboot: init::MultibootHeader) {
 
 #[lang = "panic_fmt"]
 fn panic_fmt(msg: fmt::Arguments, file: &'static str, line: u32) -> ! {
-    use io::stdio::vga_buffer::*;
-    set_color(Color::White, Color::Red);
+    //set_color(Color::White, Color::Red);
     println!("\n\nPANIC");
     loop {}
 }
