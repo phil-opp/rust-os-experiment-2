@@ -8,7 +8,7 @@ impl MultibootHeader {
     }
 }
 
-#[packed]
+#[repr(packed)]
 #[allow(dead_code)]
 struct Information {
     total_size: u32,
@@ -25,7 +25,7 @@ impl Information {
 
         //iterate over tags
         while tag < tag_end_ptr {
-            match unsafe{&*tag} {                
+            match unsafe{&*tag} {
                 &Tag{typ:0, size:8} => {break;}, //end tag
                 &Tag{typ:6, ..} => {
                     //Memory Map Tag
@@ -45,17 +45,17 @@ impl Information {
     pub fn memory_areas(&self) -> Option<MemoryAreaIter> {
         self.memory_map_tag().map(|tag| (unsafe{&*tag}).areas())
     }
-    
+
 }
 
-#[packed]
+#[repr(packed)]
 #[allow(dead_code)]
 struct Tag {
     typ: u32,
     size: u32,
 }
 
-#[packed]
+#[repr(packed)]
 #[allow(dead_code)]
 struct MemoryAreaTag {
     typ: u32,
@@ -65,7 +65,7 @@ struct MemoryAreaTag {
     first_area: MemoryArea,
 }
 
-#[packed]
+#[repr(packed)]
 #[allow(dead_code)]
 pub struct MemoryArea {
     pub base_addr: u64,
@@ -103,7 +103,7 @@ impl Iterator for MemoryAreaIter {
             None
         } else {
             let area = unsafe{&*self.current_area};
-            self.current_area = ((self.current_area as u32) + self.entry_size) 
+            self.current_area = ((self.current_area as u32) + self.entry_size)
                 as *const MemoryArea;
             if area.typ == 1 {
                 Some(area)

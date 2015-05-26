@@ -36,7 +36,7 @@ impl VgaColorCode {
 }
 
 #[derive(Clone, Copy)]
-#[packed]
+#[repr(packed)]
 struct Char {
     ascii_character: u8,
     color_code: VgaColorCode,
