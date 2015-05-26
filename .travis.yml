@@ -1,0 +1,18 @@
+language: rust
+
+rust:
+    - nightly
+
+sudo: true
+
+notifications:
+    email:
+        on_success: never
+        on_failure: never
+
+before_install:
+    - sudo apt-get update
+    - sudo apt-get install nasm grub2 xorriso
+
+script:
+    - make
