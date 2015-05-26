@@ -1,5 +1,3 @@
-use std::sync::atomic::{AtomicUsize, ATOMIC_USIZE_INIT};
-use std::sync::atomic::Ordering::Relaxed;
 use std::result::Result::Ok;
 use std::fmt::{Arguments, Write, Result};
 
@@ -44,91 +42,84 @@ struct Char {
     color_code: VgaColorCode,
 }
 
-static WRITER: Writer = Writer {
-    position: ATOMIC_USIZE_INIT,
-    color_code: ATOMIC_USIZE_INIT,
-};
-
 struct Buffer {
     chars: [[Char; BUFFER_WIDTH]; BUFFER_HEIGHT],
 }
 
-struct Writer {
-    position: AtomicUsize,
-    color_code: AtomicUsize,
+pub struct ScreenWriter {
+    column_position: usize,
+    color_code: VgaColorCode,
+    buffer: &'static mut Buffer,
 }
 
-impl Writer {
-    fn write_byte(&self, byte: u8) -> Result {
+impl ScreenWriter {
+    pub unsafe fn new(foreground: Color, background: Color) -> ScreenWriter {
+        ScreenWriter {
+            column_position: 0,
+            color_code: VgaColorCode::new(foreground, background),
+            buffer: &mut *BUFFER,
+        }
+    }
+
+    fn write_byte(&mut self, byte: u8) {
         const NEWLINE: u8 = '\n' as u8;
 
         match byte {
             NEWLINE => self.new_line(),
             byte => {
-                let color_code = self.color_code.load(Relaxed);
-                let char = Char {
+                if self.column_position >= BUFFER_WIDTH {
+                    self.new_line();
+                }
+
+                let row = BUFFER_HEIGHT - 1;
+                let col = self.column_position;
+
+                self.buffer.chars[row][col] = Char {
                     ascii_character: byte,
-                    color_code: VgaColorCode(color_code as u8),
+                    color_code: self.color_code,
                 };
-
-                let position = self.position.fetch_add(1, Relaxed);
-                let row = (position / BUFFER_WIDTH) % BUFFER_HEIGHT;
-                let col = position % BUFFER_WIDTH;
-
-                unsafe{(*BUFFER).chars[row][col] = char};
-                Ok(())
+                self.column_position += 1;
             }
         }
     }
 
-    fn new_line(&self) -> Result {
-        let buffer_size = BUFFER_WIDTH * BUFFER_HEIGHT;
-        loop {
-            let old_position = self.position.load(Relaxed);
-            let pos = old_position % buffer_size;
-            let new_position = (pos / BUFFER_WIDTH + 1) * BUFFER_WIDTH;
-            let old = self.position.compare_and_swap(old_position, new_position,
-                Relaxed);
-            if old == old_position {
-                return Ok(());
-            }
-        }
+    fn set_colors(&mut self, foreground: Color, background: Color) {
+        self.color_code = VgaColorCode::new(foreground, background)
+    }
 
+    fn new_line(&mut self) {
+        for row in 0..(BUFFER_HEIGHT-1) {
+            self.buffer.chars[row] = self.buffer.chars[row + 1]
+        }
+        self.clear_row(BUFFER_HEIGHT-1);
+        self.column_position = 0;
+    }
+
+    fn clear_row(&mut self, row: usize) {
+        let blank = Char {
+            ascii_character: ' ' as u8,
+            color_code: self.color_code,
+        };
+        self.buffer.chars[row] = [blank; BUFFER_WIDTH];
+    }
+
+    pub fn clear_screen(&mut self) {
+        for row in 0..BUFFER_HEIGHT {
+            self.clear_row(row)
+        }
     }
 }
 
-// hack to make it possible to implement Write (takes &mut self)
-struct WriterRef(&'static Writer);
 
-impl Write for WriterRef {
+impl Write for ScreenWriter {
     fn write_str(&mut self, s: &str) -> Result {
         for byte in s.bytes() {
-            try!(self.0.write_byte(byte))
+            let byte = match byte {
+                0 => 'N' as u8,
+                b => b,
+            };
+            self.write_byte(byte)
         }
         Ok(())
     }
-}
-
-pub fn set_color(foreground: Color, background: Color) {
-    let color_code = VgaColorCode::new(foreground, background);
-    WRITER.color_code.store(color_code.0 as usize, Relaxed)
-}
-
-pub fn clear_screen() {
-    let color_code = WRITER.color_code.load(Relaxed);
-    let c = Char {
-        ascii_character: ' ' as u8,
-        color_code: VgaColorCode(color_code as u8),
-    };
-    unsafe {
-        (*BUFFER).chars = [[c; BUFFER_WIDTH]; BUFFER_HEIGHT]
-    }
-}
-
-pub fn write(args: Arguments) -> Result {
-    WriterRef(&WRITER).write_fmt(args)
-}
-
-pub fn write_str(msg: &str) -> Result {
-    WriterRef(&WRITER).write_str(msg)
 }
