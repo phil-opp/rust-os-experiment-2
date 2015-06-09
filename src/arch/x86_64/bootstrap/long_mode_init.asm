@@ -4,6 +4,8 @@ BITS 64
 ; will be called after paging setup
 global long_mode_init
 
+extern setup_interrupt_table
+
 ; reserved in the linker
 extern kernel_stack_bottom
 extern kernel_stack_top
@@ -19,6 +21,7 @@ long_mode_init:
     call remap_PIC
     call reprogram_timer
     call init_fs_and_gs
+    call setup_interrupt_table
 
 start_kernel:
     ; set stack limit (bottom + 20 * 1024 (red zone))
