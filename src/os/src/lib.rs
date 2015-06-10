@@ -13,6 +13,7 @@ pub mod stream;
 pub mod allocator;
 mod init;
 mod thread;
+mod task;
 pub mod interrupts;
 
 pub unsafe fn init(multiboot: init::MultibootHeader) {
