@@ -28,3 +28,7 @@ pub fn data<'a>() -> &'a GlobalData {
 pub fn spawn<F>(f: F) where F: FnOnce() + 'static + Send {
     data().tasks.put(Task::new(f)).unwrap()
 }
+
+pub fn run_next_task() {
+    data().tasks.get().unwrap().run()
+}

@@ -12,7 +12,7 @@ pub mod io;
 pub mod stream;
 pub mod allocator;
 mod init;
-mod global;
+pub mod global; // TODO make private
 mod thread;
 mod task;
 pub mod interrupts;

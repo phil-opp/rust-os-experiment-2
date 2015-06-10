@@ -1,6 +1,7 @@
 #![feature(lang_items)]
 
 use os::stream::*;
+use os::global;
 
 extern crate os;
 
@@ -21,5 +22,9 @@ pub extern fn main(multiboot: os::MultibootHeader) {
 
     print!("this is a ");
     println!("test message...");
-    loop{}
+    loop{
+        //for _ in 0..10000 {}
+        //println!("running next task...");
+        global::run_next_task()
+    }
 }
