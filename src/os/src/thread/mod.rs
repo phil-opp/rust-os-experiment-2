@@ -4,7 +4,7 @@ use std::cell::RefCell;
 use std::fmt::{Write, Result};
 
 pub struct ThreadLocalData {
-    pub stdout: Box<Write>,
+    pub stdout: RefCell<Box<Write>>,
 }
 
 struct Dummy;
@@ -16,9 +16,9 @@ impl Write for Dummy {
 }
 
 pub fn init() {
-    let thread_local = RefCell::new(ThreadLocalData {
-        stdout: Box::new(Dummy),
-    });
+    let thread_local = ThreadLocalData{
+        stdout: RefCell::new(Box::new(Dummy)),
+    };
 
     unsafe {
         let address = into_raw(Box::new(thread_local)) as usize;
@@ -26,10 +26,10 @@ pub fn init() {
     }
 }
 
-pub fn thread_local_data<'a>() -> &'a RefCell<ThreadLocalData> {
+pub fn thread_local_data<'a>() -> &'a ThreadLocalData {
     let address: usize;
     unsafe {
         asm!("mov $0, fs:0" : "=r"(address) ::: "intel");
-        &*(address as *const RefCell<ThreadLocalData>)
+        &*(address as *const ThreadLocalData)
     }
 }
