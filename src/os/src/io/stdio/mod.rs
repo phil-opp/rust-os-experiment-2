@@ -25,3 +25,7 @@ extern fn panic_fmt(msg: fmt::Arguments, file: &'static str, line: u32) -> ! {
         msg, file, line));
     loop {}
 }
+
+pub unsafe fn interrupt_screen_writer() -> ScreenWriter {
+    ScreenWriter::new(Color::DarkGray, Color::White)
+}
