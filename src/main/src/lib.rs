@@ -11,6 +11,7 @@ pub extern fn main(multiboot: os::MultibootHeader) {
     unsafe{os::init(multiboot)};
 
     println!("Hello World!");
+    unsafe{os::enable_interrupts()};
 
     let s = SpscSender::on_value(|msg| println!("msg: {}", msg));
 
