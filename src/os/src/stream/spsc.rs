@@ -9,13 +9,13 @@ const IDLE: usize = 0;          // subscriber idle (sender has ownership)
 const WORKING: usize = 1;       // subscriber working
 const STREAM_CLOSED: usize = 2; // sender closed stream
 
-pub struct SpscSender<T, S> where 
+pub struct SpscSender<T, S> where
     S: Subscriber<T>, S: 'static + Send, T: 'static + Send
 {
     subscriber: Unique<SubscriberLink<T, S>>
 }
 
-impl<T, S> SpscSender<T, S> where 
+impl<T, S> SpscSender<T, S> where
     S: Subscriber<T>, S: 'static + Send, T: 'static + Send
 {
     pub fn new(subscriber: S) -> SpscSender<T, S> {
@@ -27,12 +27,12 @@ impl<T, S> SpscSender<T, S> where
                         status: AtomicUsize::new(IDLE),
                         subscriber: subscriber,
                 }))),
-            }            
+            }
         }
     }
 }
 
-impl<T, f> SpscSender<T, FnSubscriber<f>> where 
+impl<T, f> SpscSender<T, FnSubscriber<f>> where
     T: 'static + Send, f: FnMut(T) + Send
 {
     pub fn on_value(on_value: f) -> SpscSender<T, FnSubscriber<f>> {
@@ -40,7 +40,7 @@ impl<T, f> SpscSender<T, FnSubscriber<f>> where
     }
 }
 
-impl<T, S> Sender<T> for SpscSender<T, S> where 
+impl<T, S> Sender<T> for SpscSender<T, S> where
     S: Subscriber<T> + 'static + Send, T: 'static + Send
 {
     fn send(&self, value: T) {
@@ -50,7 +50,7 @@ impl<T, S> Sender<T> for SpscSender<T, S> where
     fn close(self) {} // stream will be closed on drop
 }
 
-impl<T, S> Drop for SpscSender<T, S> where 
+impl<T, S> Drop for SpscSender<T, S> where
     S: Subscriber<T> + 'static + Send, T: 'static + Send
 {
     fn drop(&mut self) {
@@ -64,7 +64,7 @@ struct SubscriberLink<T, S> {
     subscriber: S,
 }
 
-impl<T, S> SubscriberLink<T, S> where 
+impl<T, S> SubscriberLink<T, S> where
     S: Subscriber<T> + 'static + Send, T: 'static + Send
 {
     fn new_value(&self, value: T) {
@@ -76,7 +76,7 @@ impl<T, S> SubscriberLink<T, S> where
         match self.status.swap(STREAM_CLOSED, SeqCst) {
             WORKING => {},  // subscriber is currently working and will call
                             // the on_close function when done
-            IDLE => self.notify(),  // subscriber is idle -> start it again to 
+            IDLE => self.notify(),  // subscriber is idle -> start it again to
                                     //pop all remaining values and call on_close
             STREAM_CLOSED => panic!("closing already closed stream"),
             _ => unreachable!()
@@ -121,7 +121,7 @@ impl<T, S> SubscriberLink<T, S> where
                                 Box::from_raw(s as *mut _)};
 
                             s.subscriber.on_close();
-                        }, 
+                        },
                         _ => unreachable!()
                     }
                 }
@@ -135,7 +135,7 @@ impl<T, S> SubscriberLink<T, S> where
     unsafe fn pop_values(&mut self) {
         while let Some(value) = self.queue.pop() {
             self.subscriber.on_value(value);
-        }                        
+        }
     }
 }
 
