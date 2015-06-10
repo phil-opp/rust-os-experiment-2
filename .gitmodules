@@ -10,3 +10,7 @@
 	path = src/rust-libs/bitflags
 	url = https://github.com/phil-opp/bitflags.git
 	branch = rust-os
+[submodule "src/libs/marble"]
+	path = src/libs/marble
+	url = https://github.com/phil-opp/marble.git
+	branch = rust-os
