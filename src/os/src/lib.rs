@@ -6,6 +6,8 @@ use std::fmt;
 #[macro_use]
 extern crate bitflags;
 
+extern crate marble;
+
 pub mod io;
 pub mod stream;
 pub mod allocator;

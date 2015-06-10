@@ -8,3 +8,6 @@ path = "../rust-libs/std"
 
 [dependencies.bitflags]
 path = "../rust-libs/bitflags"
+
+[dependencies.marble]
+path = "../libs/marble"
