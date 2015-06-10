@@ -12,6 +12,7 @@ pub mod io;
 pub mod stream;
 pub mod allocator;
 mod init;
+mod global;
 mod thread;
 mod task;
 pub mod interrupts;
