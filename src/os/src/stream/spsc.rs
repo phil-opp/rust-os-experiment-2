@@ -3,6 +3,7 @@ use std::sync::atomic::AtomicUsize;
 use std::sync::atomic::Ordering::SeqCst;
 use std::sync::mpsc::spsc_queue::Queue;
 use std::ptr::Unique;
+use global;
 use super::{Sender, Subscriber};
 
 const IDLE: usize = 0;          // subscriber idle (sender has ownership)
@@ -97,8 +98,7 @@ impl<T, S> SubscriberLink<T, S> where
                 // we have exclusive access
                 let s: &mut Self = unsafe{ &mut *(self as *const _ as *mut _) };
 
-                // TODO spawn task
-                {
+                global::spawn(move || {
                     unsafe{ s.pop_values() };
                     // set the state back to IDLE if it was WORKING before
                     let st = s.status.compare_and_swap(WORKING, IDLE, SeqCst);
@@ -124,7 +124,7 @@ impl<T, S> SubscriberLink<T, S> where
                         },
                         _ => unreachable!()
                     }
-                }
+                });
             },
             WORKING => {}, // subscriber already working
             _ => unreachable!()
