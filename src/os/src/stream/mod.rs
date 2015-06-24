@@ -11,7 +11,7 @@ pub trait Sender<T> {
 pub trait Subscriber<T> {
     fn on_value(&mut self, value: T);
 
-    fn on_close(self);
+    fn on_close(self: Box<Self>);
 }
 
 pub trait Stream {
