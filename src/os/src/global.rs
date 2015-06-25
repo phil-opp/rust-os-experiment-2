@@ -4,10 +4,10 @@ use super::task::Task;
 
 const MAX_TASKS: usize = 64;
 
-static GLOBAL: GlobalDataCell = GlobalDataCell(UnsafeCell{value: None});
+static GLOBAL: GlobalDataCell<GlobalData> = GlobalDataCell(UnsafeCell{value: None});
 
-struct GlobalDataCell(UnsafeCell<Option<GlobalData>>);
-unsafe impl Sync for GlobalDataCell {}
+struct GlobalDataCell<T>(UnsafeCell<Option<T>>);
+unsafe impl<T> Sync for GlobalDataCell<T> where T: Sync {}
 
 pub struct GlobalData {
     pub tasks: RingBuffer<Task>,

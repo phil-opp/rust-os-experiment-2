@@ -1,6 +1,6 @@
 use std::boxed::FnBox;
 
-pub struct Task(Box<FnBox()>);
+pub struct Task(Box<FnBox() + Send>);
 
 impl Task {
     pub fn new<F>(f: F) -> Task where F: FnOnce() + 'static + Send {
