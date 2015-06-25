@@ -4,7 +4,7 @@ use std::sync::atomic::Ordering::SeqCst;
 use std::sync::mpsc::spsc_queue::Queue;
 use std::ptr::Unique;
 use global;
-use super::{Sender, Subscriber};
+use super::Subscriber;
 
 const IDLE: usize = 0;          // subscriber idle (sender has ownership)
 const WORKING: usize = 1;       // subscriber working
@@ -31,6 +31,12 @@ impl<T, S> SpscSender<T, S> where
             }
         }
     }
+
+    pub fn send(&mut self, value: T) {
+        unsafe{ self.subscriber.get().new_value(value) };
+    }
+
+    pub fn close(self) {} // stream will be closed on drop
 }
 
 impl<T, f> SpscSender<T, FnSubscriber<f>> where
@@ -39,16 +45,6 @@ impl<T, f> SpscSender<T, FnSubscriber<f>> where
     pub fn on_value(on_value: f) -> SpscSender<T, FnSubscriber<f>> {
         Self::new(FnSubscriber(on_value))
     }
-}
-
-impl<T, S> Sender<T> for SpscSender<T, S> where
-    S: Subscriber<T> + 'static + Send, T: 'static + Send
-{
-    fn send(&self, value: T) {
-        unsafe{ self.subscriber.get().new_value(value) };
-    }
-
-    fn close(self) {} // stream will be closed on drop
 }
 
 impl<T, S> Drop for SpscSender<T, S> where

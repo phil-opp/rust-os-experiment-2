@@ -1,7 +1,7 @@
-pub use self::spsc::SpscSender;
+//pub use self::spsc::SpscSender;
 
 mod basic;
-mod spsc;
+mod spsc_old;
 
 pub trait Sender<T> {
     fn send(&self, value: T);
