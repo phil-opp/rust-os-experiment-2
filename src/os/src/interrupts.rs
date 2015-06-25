@@ -1,5 +1,6 @@
 use enable_interrupts;
 use io::stdio;
+use io::keyboard::KeyCode;
 use std::fmt::Write;
 use global;
 
@@ -22,12 +23,12 @@ pub extern fn pagefault_handler(address: usize, error_code: isize) {
 
 #[no_mangle]
 pub extern fn keyboard_handler(interrupt_number: isize, key_code: usize) {
+    global::data().key_presses.send(KeyCode(key_code));
     unsafe{
         send_eoi(interrupt_number);
         enable_interrupts()
     }
     assert!(interrupt_number == 33);
-    global::spawn(move || print!(" [k {}] ", key_code));
 }
 
 unsafe fn send_eoi(interrupt_number: isize) {
