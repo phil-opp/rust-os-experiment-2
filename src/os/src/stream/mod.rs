@@ -7,12 +7,6 @@ mod mpsc;
 
 mod spsc_old;
 
-pub trait Sender<T> {
-    fn send(&self, value: T);
-
-    fn close(self);
-}
-
 pub trait Subscriber<T> {
     fn on_value(&mut self, value: T);
 

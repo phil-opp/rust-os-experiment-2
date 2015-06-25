@@ -1,5 +1,5 @@
 use std::fmt::{self, Write};
-use stream::{Sender, Subscriber};
+use stream::Subscriber;
 use self::vga_buffer::{ScreenWriter, Color};
 use thread::thread_local_data;
 
