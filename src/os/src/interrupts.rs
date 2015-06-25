@@ -7,7 +7,7 @@ use global;
 #[no_mangle]
 pub extern "C" fn interrupt_handler(interrupt_number: isize, error_code: isize) {
     match interrupt_number {
-        32 => global::spawn(move || print!(".")), // timer
+        32 => {}, // timer
         _ => panic!("interrupt {} with error code 0x{:x}", interrupt_number, error_code),
     }
     unsafe{
