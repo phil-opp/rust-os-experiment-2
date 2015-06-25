@@ -1,5 +1,7 @@
 #![feature(std_misc, alloc, core, unique, lang_items, asm, const_fn)]
 #![feature(optin_builtin_traits)]
+#![feature(core_intrinsics, box_raw, ptr_as_ref, fnbox)]
+#![feature(spsc_queue, mpsc_queue)]
 
 pub use init::MultibootHeader;
 use std::fmt;
