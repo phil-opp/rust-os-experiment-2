@@ -1,4 +1,5 @@
 #![feature(std_misc, alloc, core, unique, lang_items, asm, const_fn)]
+#![feature(optin_builtin_traits)]
 
 pub use init::MultibootHeader;
 use std::fmt;

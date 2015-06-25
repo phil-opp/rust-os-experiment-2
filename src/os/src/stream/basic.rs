@@ -41,7 +41,7 @@ pub struct BasicStream<T> {
 impl<T> Stream for BasicStream<T> {
     type Item = T;
 
-    fn subscribe(self, subscriber: Box<Subscriber<T>>) {
+    fn subscribe(self, subscriber: Box<Subscriber<T> + Send>) {
         let receiver_raw = boxed::into_raw(Box::new(Receiver(subscriber)));
         match self.inner.receiver.swap(receiver_raw, Ordering::SeqCst) {
             r if r == (0 as *mut _) => {},

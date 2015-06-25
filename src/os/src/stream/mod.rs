@@ -1,6 +1,7 @@
-//pub use self::spsc::SpscSender;
+pub use self::spsc::{SpscSender, stream};
 
 mod basic;
+mod spsc;
 mod spsc_old;
 
 pub trait Sender<T> {
@@ -18,5 +19,5 @@ pub trait Subscriber<T> {
 pub trait Stream {
     type Item;
 
-    fn subscribe(self, subscriber: Box<Subscriber<Self::Item>>);
+    fn subscribe(self, subscriber: Box<Subscriber<Self::Item> + Send>);
 }
