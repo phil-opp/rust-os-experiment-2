@@ -23,7 +23,7 @@ pub extern fn pagefault_handler(address: usize, error_code: isize) {
 
 #[no_mangle]
 pub extern fn keyboard_handler(interrupt_number: isize, key_code: usize) {
-    global::data().key_presses.send(ScanCode(key_code));
+    global::data().key_presses.send(ScanCode::new(key_code));
     unsafe{
         send_eoi(interrupt_number);
         enable_interrupts()

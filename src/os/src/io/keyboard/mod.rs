@@ -1,8 +1,8 @@
+pub use self::scancode::ScanCode;
+
 use stream::{Stream, Subscriber};
 
-mod qwerty;
-
-pub struct ScanCode(pub usize);
+mod scancode;
 
 pub fn init<S>(key_presses: S) where S: Stream<Item=ScanCode> {
     key_presses.subscribe(Box::new(Dummy));
