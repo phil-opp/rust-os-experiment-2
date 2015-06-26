@@ -1,15 +1,17 @@
 use stream::{Stream, Subscriber};
 
-pub struct KeyCode(pub usize);
+mod qwerty;
 
-pub fn init<S>(key_presses: S) where S: Stream<Item=KeyCode> {
+pub struct ScanCode(pub usize);
+
+pub fn init<S>(key_presses: S) where S: Stream<Item=ScanCode> {
     key_presses.subscribe(Box::new(Dummy));
 }
 
 pub struct Dummy;
 
-impl Subscriber<KeyCode> for Dummy {
-    fn on_value(&mut self, v: KeyCode) {
+impl Subscriber<ScanCode> for Dummy {
+    fn on_value(&mut self, v: ScanCode) {
         let c = match v.0 {
             0x02 => '1',
             0x03 => '2',

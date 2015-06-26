@@ -1,7 +1,7 @@
 use std::cell::UnsafeCell;
 use marble::ringbuffer::RingBuffer;
 use stream::{mpsc_stream, MpscSender};
-use io::keyboard::{self, KeyCode};
+use io::keyboard::{self, ScanCode};
 use super::task::Task;
 
 const MAX_TASKS: usize = 64;
@@ -13,7 +13,7 @@ unsafe impl<T> Sync for GlobalDataCell<T> where T: Sync {}
 
 pub struct GlobalData {
     pub tasks: RingBuffer<Task>,
-    pub key_presses: MpscSender<KeyCode>,
+    pub key_presses: MpscSender<ScanCode>,
 }
 
 pub unsafe fn init() {
