@@ -27,7 +27,7 @@ pub extern fn main(multiboot: os::MultibootHeader) {
 
     tx.send("test1");
     tx.send("test2");
-    rx.subscribe(Box::new(Dummy));
+    rx.subscribe(Dummy);
     tx.send("test3");
     tx.close();
 
@@ -46,7 +46,7 @@ impl<T> Subscriber<T> for Dummy where T: Debug {
     fn on_value(&mut self, value: T) {
         println!("Dummy: {:?}", value);
     }
-    fn on_close(self: Box<Self>) {
+    fn on_close(&mut self) {
         println!("Dummy: closed");
     }
 }
