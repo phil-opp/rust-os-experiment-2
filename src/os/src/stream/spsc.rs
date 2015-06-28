@@ -41,8 +41,11 @@ pub struct SpscStream<T> {
 impl<T> Stream for SpscStream<T> where T: Send + 'static {
     type Item = T;
 
-    fn subscribe(self, subscriber: Box<Subscriber<T> + Send>) {
-        let receiver_raw = boxed::into_raw(Box::new(Receiver(subscriber)));
+    fn subscribe<Sub>(self, subscriber: Sub) where
+        Sub: Subscriber<T> + Send + 'static
+    {
+        let receiver_raw = boxed::into_raw(Box::new(Receiver(
+            Box::new(subscriber))));
         assert!(self.inner.receiver.swap(receiver_raw, Ordering::SeqCst) ==
         (0 as *mut _));
 
@@ -89,7 +92,7 @@ impl<T> Drop for Inner<T> {
     fn drop(&mut self) {
         match self.receiver.load(Ordering::SeqCst) {
             s if s.is_null() => {} // no receiver registered,
-            s => unsafe{Box::from_raw(s)}.0.on_close(),
+            s => unsafe{Box::from_raw(s)}.0.on_close_boxed(),
         }
     }
 }

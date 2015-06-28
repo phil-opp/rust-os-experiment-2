@@ -140,5 +140,5 @@ pub struct FnSubscriber<f>(f);
 impl<T, f> Subscriber<T> for FnSubscriber<f> where f: FnMut(T) {
     fn on_value(&mut self, value: T) {(self.0)(value)}
 
-    fn on_close(self: Box<Self>) {println!("closed")}
+    fn on_close(&mut self) {println!("closed")}
 }

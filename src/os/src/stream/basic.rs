@@ -29,7 +29,7 @@ impl<T> Sender<T> {
     pub fn close(self) {
         match self.inner.receiver.swap(0 as *mut _, Ordering::SeqCst) {
             r if r == (0 as *mut _) => loop{},
-            r => unsafe{Box::from_raw(r)}.0.on_close(),
+            r => unsafe{Box::from_raw(r)}.0.on_close_boxed(),
         }
     }
 }
@@ -41,8 +41,11 @@ pub struct BasicStream<T> {
 impl<T> Stream for BasicStream<T> {
     type Item = T;
 
-    fn subscribe(self, subscriber: Box<Subscriber<T> + Send>) {
-        let receiver_raw = boxed::into_raw(Box::new(Receiver(subscriber)));
+    fn subscribe<Sub>(self, subscriber: Sub) where
+        Sub: Subscriber<T> + Send + 'static
+    {
+        let receiver_raw = boxed::into_raw(Box::new(Receiver(
+            Box::new(subscriber))));
         match self.inner.receiver.swap(receiver_raw, Ordering::SeqCst) {
             r if r == (0 as *mut _) => {},
             r => mem::drop(unsafe{Box::from_raw(r)}),
