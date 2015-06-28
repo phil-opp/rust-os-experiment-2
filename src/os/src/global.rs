@@ -6,7 +6,8 @@ use super::task::Task;
 
 const MAX_TASKS: usize = 64;
 
-static GLOBAL: GlobalDataCell<GlobalData> = GlobalDataCell(UnsafeCell{value: None});
+static GLOBAL: GlobalDataCell<GlobalData> = GlobalDataCell(
+    UnsafeCell::new(None));
 
 struct GlobalDataCell<T>(UnsafeCell<Option<T>>);
 unsafe impl<T> Sync for GlobalDataCell<T> where T: Sync {}
@@ -29,7 +30,7 @@ pub unsafe fn init() {
 }
 
 pub fn data<'a>() -> &'a GlobalData {
-    GLOBAL.0.value.as_ref().unwrap()
+    unsafe{(*GLOBAL.0.get()).as_ref()}.unwrap()
 }
 
 // TODO Future<T>

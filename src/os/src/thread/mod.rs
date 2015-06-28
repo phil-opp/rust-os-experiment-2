@@ -1,5 +1,3 @@
-use stream::SpscSender;
-use std::boxed::into_raw;
 use std::cell::RefCell;
 use std::fmt::{Write, Result};
 
@@ -21,7 +19,7 @@ pub fn init() {
     };
 
     unsafe {
-        let address = into_raw(Box::new(thread_local)) as usize;
+        let address = Box::into_raw(Box::new(thread_local)) as usize;
         asm!("mov fs:0, $0" :: "r"(address) :: "intel", "volatile");
     }
 }

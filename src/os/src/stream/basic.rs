@@ -1,8 +1,7 @@
 use std::boxed;
 use std::mem;
 use std::sync::Arc;
-use std::sync::atomic::{AtomicPtr, AtomicIsize, Ordering};
-use std::sync::mpsc::spsc_queue::Queue;
+use std::sync::atomic::{AtomicPtr, Ordering};
 use super::{Stream, Subscriber};
 
 pub fn stream<T>() -> (Sender<T>, BasicStream<T>) {

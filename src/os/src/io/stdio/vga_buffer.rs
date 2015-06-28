@@ -1,11 +1,12 @@
 use std::result::Result::Ok;
-use std::fmt::{Arguments, Write, Result};
+use std::fmt::{Write, Result};
 
 const BUFFER: *mut Buffer = 0xb8000 as *mut _;
 const BUFFER_HEIGHT: usize = 25;
 const BUFFER_WIDTH: usize = 80;
 
 #[derive(Clone, Copy)]
+#[allow(dead_code)]
 #[repr(u8)]
 pub enum Color {
     Black      = 0,
@@ -83,7 +84,8 @@ impl ScreenWriter {
         }
     }
 
-    fn set_colors(&mut self, foreground: Color, background: Color) {
+    #[allow(dead_code)]
+    pub fn set_colors(&mut self, foreground: Color, background: Color) {
         self.color_code = VgaColorCode::new(foreground, background)
     }
 

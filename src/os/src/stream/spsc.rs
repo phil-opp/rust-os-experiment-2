@@ -1,4 +1,3 @@
-use std::boxed;
 use std::sync::Arc;
 use std::sync::atomic::{AtomicPtr, AtomicIsize, Ordering};
 use std::sync::mpsc::spsc_queue::Queue;
@@ -44,7 +43,7 @@ impl<T> Stream for SpscStream<T> where T: Send + 'static {
     fn subscribe<Sub>(self, subscriber: Sub) where
         Sub: Subscriber<T> + Send + 'static
     {
-        let receiver_raw = boxed::into_raw(Box::new(Receiver(
+        let receiver_raw = Box::into_raw(Box::new(Receiver(
             Box::new(subscriber))));
         assert!(self.inner.receiver.swap(receiver_raw, Ordering::SeqCst) ==
         (0 as *mut _));

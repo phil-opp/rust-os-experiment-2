@@ -1,5 +1,4 @@
 use std::fmt::{self, Write};
-use stream::Subscriber;
 use self::vga_buffer::{ScreenWriter, Color};
 use thread::thread_local_data;
 
@@ -13,7 +12,7 @@ pub unsafe fn init() {
 
 #[no_mangle]
 pub extern fn print_to_stdout(args: fmt::Arguments) {
-    thread_local_data().stdout.borrow_mut().write_fmt(args);
+    thread_local_data().stdout.borrow_mut().write_fmt(args).unwrap();
 }
 
 #[lang = "panic_fmt"]
@@ -22,6 +21,6 @@ extern fn panic_fmt(msg: fmt::Arguments, file: &'static str, line: u32) -> ! {
         ScreenWriter::new(Color::White, Color::Red)
     };
     err_writer.write_fmt(format_args!("\nPANIC: `{}` in `{}` in line `{}`",
-        msg, file, line));
+        msg, file, line)).unwrap();
     loop {}
 }

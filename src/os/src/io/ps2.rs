@@ -49,7 +49,7 @@ pub unsafe fn init() {
     // get the configuration byte
     send_command(0x20);
     let mut configuration = read_data();
-    let dual_channel = (configuration & 0b100000) != 0;
+    //let dual_channel = (configuration & 0b100000) != 0;
     let dual_channel = false; // TODO
 
     // disable IRQs and translation

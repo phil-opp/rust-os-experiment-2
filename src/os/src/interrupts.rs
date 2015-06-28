@@ -1,7 +1,5 @@
 use enable_interrupts;
-use io::stdio;
 use io::keyboard::ScanCode;
-use std::fmt::Write;
 use global;
 
 #[no_mangle]
