@@ -5,7 +5,8 @@ use stream::{Stream, Subscriber};
 mod scancode;
 
 pub fn init<S>(key_presses: S) where S: Stream<Item=ScanCode> {
-    key_presses.subscribe(Box::new(Dummy));
+    let mut parser = scancode::Parser::new();
+    key_presses.map(move |code| parser.parse_code(code)).subscribe(Dummy);
 }
 
 struct Dummy;

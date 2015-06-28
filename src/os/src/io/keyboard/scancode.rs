@@ -10,7 +10,7 @@ impl ScanCode {
     }
 }
 
-struct Parser {
+pub struct Parser {
     modifier_bytes: Vec<ScanCode>,
 }
 
@@ -172,7 +172,7 @@ impl Parser {
                     0x12 | 0xF0 => {
                         self.modifier_bytes.push(code); None},
 
-                    _ => unreachable!(),
+                    b => unreachable!("code {:x}", b),
                 },
                 0xE1 => {
                     assert!(code.0 == 0x14);
