@@ -20,6 +20,9 @@ build: iso
 run: build
 	@qemu-system-$(arch) -hda $(iso)
 
+debug: build
+	@qemu-system-$(arch) -s -S -hda $(iso)
+
 release-run: release
 	@qemu-system-$(arch) -hda $(iso)
 
@@ -27,7 +30,7 @@ release: cargo_command = cargo build --release
 release: debug = release
 release: iso
 
-clean: 
+clean:
 	-@rm -r build 2> /dev/null || true
 	@cd src/main; cargo clean
 
@@ -41,11 +44,11 @@ $(grub_cfg): src/grub/grub.cfg
 	@cp $< $@
 
 # link rustos
-$(rustos): src/arch/$(arch)/linker.ld cargo $(object_files) 
+$(rustos): src/arch/$(arch)/linker.ld cargo $(object_files)
 	@mkdir -p $(shell dirname $(rustos))
 	@ld -T $< $(object_files) $(cargo_lib) -o $@
 
-cargo: 
+cargo:
 	@cd src/main; $(cargo_command)
 
 # compile assembly files

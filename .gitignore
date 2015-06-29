@@ -2,3 +2,4 @@ target
 build
 Cargo.lock
 *.sublime-workspace
+rust-os-gdb

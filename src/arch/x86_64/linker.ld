@@ -26,39 +26,12 @@ SECTIONS {
         *(.interrupt_handlers)
     }
 
-    .text :
-    {
-      *(.text)
-      *(.text.*)
-    }
-
-    .rodata :
-    {
-      *(.rodata)
-      *(.rodata.*)
-    }
-
-    .data :
-    {
-      *(.data)
-    }
-
-    .bss :
-    {
-     *(.bss)
-     *(COMMON)
-    }
-
-    other :
-    {
-      *(*)
-    }
-
     kernel_stack_bottom = .;
     . += kernel_stack_size;
     kernel_stack_top = .;
 
-    . = ALIGN(0x1000);
-    kernel_end_symbol_table_entry = .;
-
+    .text :
+    {
+      *(.text)
+    }
 }
