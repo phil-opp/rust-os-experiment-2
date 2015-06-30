@@ -44,12 +44,12 @@ pub fn init(multiboot: ::MultibootHeader) {
 
     unsafe {
         (*STACK_POINTER) = FrameStack {
-            first: offset(STACK_POINTER as *const FrameStack, 1) as *const Frame, 
+            first: offset(STACK_POINTER as *const FrameStack, 1) as *const Frame,
             length: 0,
         };
     }
 
-    let areas = multiboot.memory_areas().unwrap();    
+    let areas = multiboot.memory_areas().unwrap();
     let number_of_frames = areas.clone().fold(0, |n, area| {n + area.length / PAGE_SIZE}) as u32;
 
     // for memory > 1GB we need more p1 tables
@@ -84,13 +84,13 @@ pub fn init(multiboot: ::MultibootHeader) {
     }
 
     unsafe fn map_to_p1_table(p2_index: u32, frame: Frame) {
-        let p1_field: *mut u64 = (0o177777_777_777_000_001_0000 + (p2_index as u64) * 8) 
+        let p1_field: *mut u64 = (0o177777_777_777_000_001_0000 + (p2_index as u64) * 8)
             as *mut u64;
         *p1_field = ((frame.number as u64) << 12) | 1;
     }
-    
+
     unsafe fn map_p1_entries(p2_index: u32, p1_index: u32, to: Frame) {
-        let entry: *mut u64 = (0o177777_777_000_001_000_0000 | ((p2_index as u64) << 12) 
+        let entry: *mut u64 = (0o177777_777_000_001_000_0000 | ((p2_index as u64) << 12)
             | (p1_index as u64 * 8)) as *mut u64;
         *entry = ((to.number as u64) << 12) | 3;
     }
