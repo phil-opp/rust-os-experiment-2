@@ -10,6 +10,7 @@ object_files := $(patsubst src/arch/$(arch)/%.asm, build/arch/%.o, $(assembly))
 # the name of the produced rust library
 cargo_lib = src/main/target/$(debug)/$(shell ls src/main/target/$(debug) | grep librustos | head -1)
 rustos := build/isofiles/boot/rustos.bin
+rustos-debug := build/isofiles/boot/rustos.debug
 grub_cfg := build/isofiles/boot/grub/grub.cfg
 iso := build/rustos.iso
 
@@ -46,7 +47,8 @@ $(grub_cfg): src/grub/grub.cfg
 # link rustos
 $(rustos): src/arch/$(arch)/linker.ld cargo $(object_files)
 	@mkdir -p $(shell dirname $(rustos))
-	@ld -T $< $(object_files) $(cargo_lib) -o $@
+	@ld -T $< $(object_files) $(cargo_lib) -o $(rustos-debug)
+	@objcopy --strip-debug $(rustos-debug) $@
 
 cargo:
 	@cd src/main; $(cargo_command)

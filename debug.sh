@@ -20,6 +20,6 @@ GDB_PYTHON_MODULE_DIRECTORY="$RUSTC_SYSROOT/lib/rustlib/etc"
 PYTHONPATH="$PYTHONPATH:$GDB_PYTHON_MODULE_DIRECTORY" ./rust-os-gdb/bin/gdb \
   -d "$GDB_PYTHON_MODULE_DIRECTORY" \
   -iex "add-auto-load-safe-path $GDB_PYTHON_MODULE_DIRECTORY" \
-  "build/isofiles/boot/rustos.bin" \
+  "build/isofiles/boot/rustos.debug" \
   -ex "target remote localhost:1234" \
   "$@"
