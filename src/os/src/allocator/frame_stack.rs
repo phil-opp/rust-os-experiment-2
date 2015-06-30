@@ -4,10 +4,6 @@ use std::intrinsics::{offset, size_of};
 use std::cmp::Ordering;
 use super::paging::PAGE_SIZE;
 
-extern {
-    static kernel_end_symbol_table_entry: ();
-}
-
 #[derive(Clone, Copy)]
 pub struct Frame {
     pub number: u32,
@@ -33,8 +29,9 @@ struct FrameStack {
 
 pub fn init(multiboot: ::MultibootHeader) {
 
-    let kernel_end = &kernel_end_symbol_table_entry as *const () as u32;
-    let stack_start_frame = Frame{number: kernel_end >> 12};
+    let kernel_end = multiboot.kernel_end();
+    let kernel_end = (kernel_end - 1 + 4096) & 4096;   // page align
+    let stack_start_frame = Frame{number: (kernel_end >> 12) as u32};
 
     // map frame stack to 2mb behind kernel
     unsafe{ map_p1_entries(0, 0, stack_start_frame) };
