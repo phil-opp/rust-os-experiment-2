@@ -7,17 +7,18 @@ mod qwerty;
 
 pub fn init<S>(key_presses: S) where S: Stream<Item=ScanCode> {
     let mut parser = scancode::Parser::new();
-    key_presses.filter_map(move |code| parser.parse_code(code)).subscribe(Dummy);
+    let mut qwerty_parser = qwerty::Parser::new();
+    key_presses.filter_map(move |code| parser.parse_code(code))
+        .filter_map(move |key_press| qwerty_parser.parse(key_press))
+        .subscribe(Dummy);
 }
 
 struct Dummy;
 
-impl Subscriber<KeyPress> for Dummy {
-    fn on_value(&mut self, v: KeyPress) {
-        use self::KeyPress::*;
-
-        if let KeyPressed(press) = v {
-            print!("{:?} ", press);
+impl Subscriber<Input> for Dummy {
+    fn on_value(&mut self, input: Input) {
+        if let Input::Char(c) = input {
+            print!("{}", c);
         }
     }
 }
