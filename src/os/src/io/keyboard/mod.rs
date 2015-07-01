@@ -3,6 +3,7 @@ pub use self::scancode::ScanCode;
 use stream::{Stream, Subscriber};
 
 mod scancode;
+mod qwerty;
 
 pub fn init<S>(key_presses: S) where S: Stream<Item=ScanCode> {
     let mut parser = scancode::Parser::new();
