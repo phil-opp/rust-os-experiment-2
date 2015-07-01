@@ -21,6 +21,12 @@ impl Subscriber<KeyPress> for Dummy {
     }
 }
 
+#[derive(Debug)]
+enum Input {
+    Char(char),
+    ControlKeyPressed(ControlKey),
+    ControlKeyReleased(ControlKey),
+}
 
 #[derive(Debug)]
 enum KeyPress {
@@ -30,11 +36,17 @@ enum KeyPress {
 
 #[derive(Debug)]
 enum Key {
+    Control(ControlKey),
+    Printable(PrintableKey),
+}
+
+#[derive(Debug)]
+enum ControlKey {
     Escape,
     Backspace,
     Tab,
     Enter,
-    Space,
+    KeypadEnter,
 
     LeftCtrl,
     LeftAlt,
@@ -44,18 +56,6 @@ enum Key {
     RightAlt,
     RightShift,
     RightGui,
-
-    Comma,
-    Point,
-    Semicolon,
-    Slash,
-    Backslash,
-    LeftBracket,
-    RightBracket,
-    Equal,
-    SingleQuote,
-    BackTick,
-    Minus,
 
     Home,
     End,
@@ -74,6 +74,59 @@ enum Key {
     ScrollLock,
     PrintScreen,
     Pause,
+
+    F1,
+    F2,
+    F3,
+    F4,
+    F5,
+    F6,
+    F7,
+    F8,
+    F9,
+    F10,
+    F11,
+    F12,
+
+    AcpiPower,
+    AcpiSleep,
+    AcpiWake,
+
+    MultimediaStop,
+    MultimediaPlayPause,
+    MultmediaNext,
+    MultimediaPrevious,
+    MultimediaHome,
+    MultimediaEmail,
+    MultimediaSearch,
+    MultimediaRefresh,
+    MultimediaForward,
+    MultimediaBack,
+    MultmediaMediaSelect,
+    MultimediaComputer,
+    MultimediaVolumeUp,
+    MultimediaVolumeDown,
+    MultimediaMute,
+    MultimediaCalculator,
+    MultimediaFavourites,
+    Apps,
+}
+
+#[derive(Debug)]
+enum PrintableKey {
+    Space,
+
+    Comma,
+    Point,
+    Semicolon,
+    Slash,
+    Backslash,
+    LeftBracket,
+    RightBracket,
+    Equal,
+    SingleQuote,
+    BackTick,
+    Minus,
 
     Number0,
     Number1,
@@ -113,19 +166,6 @@ enum Key {
     Y,
     Z,
 
-    F1,
-    F2,
-    F3,
-    F4,
-    F5,
-    F6,
-    F7,
-    F8,
-    F9,
-    F10,
-    F11,
-    F12,
-
     Keypad0,
     Keypad1,
     Keypad2,
@@ -142,28 +182,4 @@ enum Key {
     KeypadStar,
     KeypadSlash,
     KeypadPoint,
-    KeypadEnter,
-
-    AcpiPower,
-    AcpiSleep,
-    AcpiWake,
-
-    MultimediaStop,
-    MultimediaPlayPause,
-    MultmediaNext,
-    MultimediaPrevious,
-    MultimediaHome,
-    MultimediaEmail,
-    MultimediaSearch,
-    MultimediaRefresh,
-    MultimediaForward,
-    MultimediaBack,
-    MultmediaMediaSelect,
-    MultimediaComputer,
-    MultimediaVolumeUp,
-    MultimediaVolumeDown,
-    MultimediaMute,
-    MultimediaCalculator,
-    MultimediaFavourites,
-    Apps,
 }
