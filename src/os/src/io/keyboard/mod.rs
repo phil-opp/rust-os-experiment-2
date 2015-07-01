@@ -6,16 +6,16 @@ mod scancode;
 
 pub fn init<S>(key_presses: S) where S: Stream<Item=ScanCode> {
     let mut parser = scancode::Parser::new();
-    key_presses.map(move |code| parser.parse_code(code)).subscribe(Dummy);
+    key_presses.filter_map(move |code| parser.parse_code(code)).subscribe(Dummy);
 }
 
 struct Dummy;
 
-impl Subscriber<Option<KeyPress>> for Dummy {
-    fn on_value(&mut self, v: Option<KeyPress>) {
+impl Subscriber<KeyPress> for Dummy {
+    fn on_value(&mut self, v: KeyPress) {
         use self::KeyPress::*;
 
-        if let Some(KeyPressed(press)) = v {
+        if let KeyPressed(press) = v {
             print!("{:?} ", press);
         }
     }
