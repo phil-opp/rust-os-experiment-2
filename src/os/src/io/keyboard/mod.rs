@@ -4,10 +4,11 @@ use stream::{Stream, Subscriber};
 
 mod scancode;
 mod qwerty;
+mod qwertz;
 
 pub fn init<S>(key_presses: S) where S: Stream<Item=ScanCode> {
     let mut parser = scancode::Parser::new();
-    let mut qwerty_parser = qwerty::Parser::new();
+    let mut qwerty_parser = qwertz::Parser::new();
     key_presses.filter_map(move |code| parser.parse_code(code))
         .filter_map(move |key_press| qwerty_parser.parse(key_press))
         .subscribe(Dummy);
