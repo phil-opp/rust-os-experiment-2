@@ -35,6 +35,12 @@ pub trait Stream {
     {
         Filter{stream: self, predicate: predicate}
     }
+
+    fn filter_map<B, F>(self, f:F) -> FilterMap<Self, F> where
+        Self:Sized, F: FnMut(Self::Item) -> Option<B>,
+    {
+        FilterMap{stream: self, f: f}
+    }
 }
 
 pub struct Map<S, F> {
@@ -111,6 +117,50 @@ impl<T, Sub, P> Subscriber<T> for FilterSubscriber<Sub, P> where
     fn on_value(&mut self, value: T) {
         if (self.predicate)(&value) {
             self.subscriber.on_value(value)
+        }
+    }
+
+    fn on_close(&mut self) {self.subscriber.on_close()}
+
+    fn on_close_boxed(self: Box<Self>) {self.subscriber.on_close_unboxed()}
+
+    fn on_close_unboxed(self) where Self: Sized {
+        self.subscriber.on_close_unboxed()
+    }
+}
+
+pub struct FilterMap<S, F> {
+    stream: S,
+    f: F,
+}
+
+impl<B, S: Stream, F> Stream for FilterMap<S, F> where
+    F: FnMut(S::Item) -> Option<B> + Send + 'static
+{
+    type Item = B;
+
+    #[inline]
+    fn subscribe<Sub>(self, subscriber: Sub) where
+        Sub: Subscriber<B> + Send + 'static
+    {
+        self.stream.subscribe(FilterMapSubscriber {
+            subscriber: subscriber,
+            f: self.f,
+        });
+    }
+}
+
+struct FilterMapSubscriber<Sub, F> {
+    subscriber: Sub,
+    f: F,
+}
+
+impl<T, B, Sub, F> Subscriber<T> for FilterMapSubscriber<Sub, F> where
+    F: FnMut(T) -> Option<B>, Sub: Subscriber<B>,
+{
+    fn on_value(&mut self, value: T) {
+        if let Some(mapped_value) = (self.f)(value) {
+            self.subscriber.on_value(mapped_value)
         }
     }
 
