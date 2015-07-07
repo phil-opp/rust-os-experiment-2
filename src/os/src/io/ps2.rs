@@ -1,14 +1,14 @@
 
 pub unsafe fn init() {
-    use {in_byte, out_byte};
+    use super::arch::Port;
 
-    const COMMAND_PORT: u16 = 0x64;
-    const STATUS_PORT: u16 = 0x64;
-    const DATA_PORT: u16 = 0x60;
+    const COMMAND_PORT: Port = Port::new(0x64);
+    const STATUS_PORT: Port = Port::new(0x64);
+    const DATA_PORT: Port = Port::new(0x60);
 
     fn wait_for_free_input_buffer() {
         loop {
-            let status = unsafe{in_byte(STATUS_PORT)};
+            let status = unsafe{STATUS_PORT.in_byte()};
             if status & 0b10 == 0 {
                 break; // input buffer is free
             }
@@ -17,7 +17,7 @@ pub unsafe fn init() {
 
     fn wait_for_filled_output_buffer() {
         loop {
-            let status = unsafe{in_byte(STATUS_PORT)};
+            let status = unsafe{STATUS_PORT.in_byte()};
             if status & 0b01 == 1 {
                 break; // output buffer is filled
             }
@@ -26,17 +26,17 @@ pub unsafe fn init() {
 
     unsafe fn send_command(command: u8) {
         wait_for_free_input_buffer();
-        out_byte(COMMAND_PORT, command)
+        COMMAND_PORT.out_byte(command)
     }
 
     unsafe fn send_data(data: u8) {
         wait_for_free_input_buffer();
-        out_byte(DATA_PORT, data)
+        DATA_PORT.out_byte(data)
     }
 
     unsafe fn read_data() -> u8 {
         wait_for_filled_output_buffer();
-        in_byte(DATA_PORT)
+        DATA_PORT.in_byte()
     }
 
     // disable devices
@@ -44,7 +44,7 @@ pub unsafe fn init() {
     send_command(0xA7);
 
     // flush output buffer
-    in_byte(DATA_PORT);
+    DATA_PORT.in_byte();
 
     // get the configuration byte
     send_command(0x20);

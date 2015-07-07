@@ -30,16 +30,18 @@ pub extern fn keyboard_handler(interrupt_number: isize, key_code: usize) {
 }
 
 unsafe fn send_eoi(interrupt_number: isize) {
-    use out_byte;
-    unsafe fn send_master_eoi() {out_byte(0x20, 0x20)}
-    unsafe fn send_slave_eoi() {out_byte(0xA0, 0x20)}
+    use io::arch::Port;
+    let master_port = Port::new(0x20);
+    let slave_port = Port::new(0xA0);
+
+    unsafe fn send_eoi(mut port: Port) {port.out_byte(0x20)}
 
     match interrupt_number {
         i if i >= 40 => {
-            send_slave_eoi();
-            send_master_eoi();
+            send_eoi(slave_port);
+            send_eoi(master_port);
         },
-        32...40 => send_master_eoi(),
+        32...40 => send_eoi(master_port),
         _ => {},
     }
 }

@@ -31,12 +31,3 @@ pub unsafe fn enable_interrupts() {
 unsafe fn disable_interrupts() {
     asm!("cli" :::: "volatile");
 }
-
-unsafe fn out_byte(port: u16, data: u8) {
-    asm!("outb %al, %dx" :: "{dx}"(port), "{al}"(data) :: "volatile");
-}
-unsafe fn in_byte(port: u16) -> u8 {
-    let ret: u8;
-    asm!("inb %dx, %al" : "={al}"(ret) : "{dx}"(port) :: "volatile");
-    ret
-}
