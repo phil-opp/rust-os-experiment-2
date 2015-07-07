@@ -23,9 +23,9 @@ header_start:
     dd 0                            ; architecture 0 (protected mode i386)
     dd header_end - header_start    ; header length
     ; checksum
-    dd 0xffffffff - (0xe85250d6 + 0 + (header_end - header_start)) + 1   
+    dd 0xffffffff - (0xe85250d6 + 0 + (header_end - header_start)) + 1
 
-    ; insert multiboot tags here if needed (but remember to update header 
+    ; insert multiboot tags here if needed (but remember to update header
     ; lenght and checksum)
 
     ; special end tag
@@ -41,10 +41,10 @@ section .text
 start:
     ; load a new GDT as we cannot trust grub's GDT
     mov eax, gdt32_pointer
-    lgdt [eax]    
+    lgdt [eax]
     mov esp, stack      ; load stack pointer
     push 0x8            ; code segment in the gdt
-    push .gdt32_code_segment_ready 
+    push .gdt32_code_segment_ready
     retf                ; jump using code segment in gdt32
 
 .gdt32_code_segment_ready:
@@ -54,8 +54,8 @@ start:
     mov ss, ax
 
 .gdt32_ready:
-    ; Now we have switched to our new gdt32. The next step is to enable 
-    ; long mode (64 bit). Therefor we must setup paging. 
+    ; Now we have switched to our new gdt32. The next step is to enable
+    ; long mode (64 bit). Therefor we must setup paging.
     call setup_paging
 
 ; now we need a 64-bit GDT
@@ -66,7 +66,7 @@ start:
 .switch_to_64bit_code:
     push 0x08
     push long_mode_init
-    retf 
+    retf
 
 
 ; section for read only data
@@ -118,5 +118,5 @@ tss:
 section .data
 ; a small stack (only for bootstrap)
 stack_bottom:
-times 0x1000 db 0 
+times 0x1000 db 0
 stack:
