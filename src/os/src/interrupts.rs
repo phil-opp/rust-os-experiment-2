@@ -16,7 +16,12 @@ pub extern "C" fn interrupt_handler(interrupt_number: isize, error_code: isize) 
 
 #[no_mangle]
 pub extern fn pagefault_handler(address: usize, error_code: isize) {
-    panic!("pagefault at {} with error code {}", address, error_code)
+    panic!("pagefault at 0x{:x} with error code {}", address, error_code)
+}
+
+#[no_mangle]
+pub extern fn general_protection_fault_handler(address: usize, error_code: isize) {
+    panic!("general protection fault at 0x{:x} with error code {}", address, error_code)
 }
 
 #[no_mangle]

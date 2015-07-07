@@ -3,6 +3,7 @@ BITS 64
 global pop_registers_and_iret
 
 extern interrupt_handler;
+extern general_protection_fault_handler;
 extern pagefault_handler;
 extern keyboard_handler;
 
@@ -38,7 +39,18 @@ HANDLER_WITH_ERRCODE 11, interrupt_handler
 HANDLER_WITH_ERRCODE 12, interrupt_handler
 
 %define H13
-HANDLER_WITH_ERRCODE 13, interrupt_handler
+interrupt_handler_13:        ; general protection fault
+    sub rsp, 8      ; make room for rip (replaces interrupt number)
+    push rax
+
+    add rsp, 24     ; copy rip from trapframe to stack before rax
+    pop rax
+    sub rsp, 16
+    push rax
+    sub rsp, 8      ; move rsp to tos again
+
+    mov rax, general_protection_fault_handler
+    jmp push_registers_and_call_handler
 
 %define H14
 interrupt_handler_14:        ; pagefault
