@@ -58,6 +58,13 @@ reload_segment_registers:
 
 ; enable SSE and the like
 setup_SSE:
+    ; check for SSE
+    mov rax, 0x1
+    cpuid
+    test edx, 1<<25
+    jz .no_SSE
+
+    ; enable SSE
     mov rax, cr0
     and ax, 0xFFFB      ; clear coprocessor emulation CR0.EM
     or ax, 0x2          ; set coprocessor monitoring  CR0.MP
@@ -67,6 +74,12 @@ setup_SSE:
     mov cr4, rax
 
     ret
+
+.no_SSE:
+    call clear_screen_red
+    cli
+    hlt
+    jmp .no_SSE
 
 remap_PIC:
     in al, 0x21                   ; save pic1 mask
@@ -116,6 +129,14 @@ reprogram_timer:
 clear_screen_green:
     mov edi, 0xB8000              ; Set the destination index to 0xB8000.
     mov rax, 0x2F202F202F202F20   ; Set the A-register to 0x1F201F201F201F20.
+    mov ecx, 500                  ; Set the C-register to 500.
+    rep stosq                     ; Clear the screen.
+
+    ret
+
+clear_screen_red:
+    mov edi, 0xB8000              ; Set the destination index to 0xB8000.
+    mov rax, 0x4F404F404F404F40   ; Set the A-register to 0x1F201F201F201F20.
     mov ecx, 500                  ; Set the C-register to 500.
     rep stosq                     ; Clear the screen.
 
