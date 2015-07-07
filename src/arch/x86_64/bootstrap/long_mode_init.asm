@@ -16,6 +16,9 @@ extern main
 
 section .text
 long_mode_init:
+    ; backup rbx, as it contains the multiboot pointer and cpuid overwrites it
+    mov r15, rbx
+
     call reload_segment_registers
     call setup_SSE
     call remap_PIC
@@ -28,7 +31,7 @@ start_kernel:
     ; see std/sys/common/stack.rs
     mov qword [fs:0x70], kernel_stack_bottom + 20*1024
 
-    mov rdi, rbx                ; multiboot structure
+    mov rdi, r15                ; multiboot structure
     mov rsp, kernel_stack_top   ; switch to kernel stack
 
     call main
