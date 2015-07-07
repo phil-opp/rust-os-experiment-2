@@ -58,8 +58,8 @@ impl Information {
     }
 
     unsafe fn kernel_end(&self) -> usize {
-        (&*self.elf_tag().unwrap()).sections().map(|s| s.addr + s.size)
-            .max().unwrap() as usize
+        (&*self.elf_tag().expect("no elf tag")).sections().map(|s| s.addr + s.size)
+            .max().expect("no elf sections") as usize
     }
 
 }
