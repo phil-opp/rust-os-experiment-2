@@ -15,7 +15,7 @@ grub_cfg := build/isofiles/boot/grub/grub.cfg
 iso := build/rustos.iso
 
 build: debug = debug
-build: cargo_command = cargo build
+build: cargo_command = cargo rustc -- -C relocation-model=pic
 build: iso
 
 run: build
@@ -27,7 +27,7 @@ debug: build
 release-run: release
 	@qemu-system-$(arch) -hda $(iso)
 
-release: cargo_command = cargo build --release
+release: cargo_command = cargo rustc --release -- -C relocation-model=pic
 release: debug = release
 release: iso
 
