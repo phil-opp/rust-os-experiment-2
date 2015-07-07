@@ -19,7 +19,7 @@ build: cargo_command = cargo build
 build: iso
 
 run: build
-	@qemu-system-$(arch) -hda $(iso)
+	@qemu-system-$(arch) -s -hda $(iso)
 
 debug: build
 	@qemu-system-$(arch) -s -S -hda $(iso)
