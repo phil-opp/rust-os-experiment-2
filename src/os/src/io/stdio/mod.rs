@@ -5,7 +5,7 @@ use thread::thread_local_data;
 mod vga_buffer;
 
 pub unsafe fn init() {
-    let mut screen_writer = ScreenWriter::new(Color::Black, Color::White);
+    let mut screen_writer = ScreenWriter::new(Color::Black, Color::LightGray);
     screen_writer.clear_screen();
     *(thread_local_data().stdout.borrow_mut()) = Box::new(screen_writer);
 }
