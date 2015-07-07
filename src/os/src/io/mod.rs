@@ -1,5 +1,6 @@
 pub mod stdio;
 pub mod keyboard;
+pub mod pci;
 mod ps2;
 
 #[cfg(target_arch = "x86_64")]

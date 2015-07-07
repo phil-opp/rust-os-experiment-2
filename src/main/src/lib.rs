@@ -33,6 +33,9 @@ pub extern fn main(multiboot: os::MultibootHeader) {
 
     print!("this is a ");
     println!("test message...");
+
+    os::io::pci::print_devices();
+
     loop{
         //for _ in 0..10000 {}
         //println!("running next task...");
