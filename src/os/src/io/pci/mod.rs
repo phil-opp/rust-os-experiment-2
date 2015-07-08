@@ -79,6 +79,9 @@ struct Header1 {
 
 #[derive(Debug)]
 struct Device {
+    bus: u8,
+    slot: u8,
+    function: u8,
     header: Header,
 }
 
@@ -132,8 +135,10 @@ fn add_devices_on_bus(devices: &mut Vec<Device>, bus: u8) {
     {
         // check if multi function device
         if header.common.header_type & 0x80 != 0 {
-            for h in (1..8).filter_map(|func| get_header(bus, slot, func)) {
-                devices.push(Device{header: h})
+            for device in (1..8).filter_map(|func| get_header(bus, slot, func).map(
+                |h| Device{header:h, bus: bus, slot: slot, function: func}))
+            {
+                devices.push(device)
             }
         }
 
@@ -147,8 +152,7 @@ fn add_devices_on_bus(devices: &mut Vec<Device>, bus: u8) {
             add_devices_on_bus(devices, secondary_bus);
         }
 
-
-        devices.push(Device{header: header});
+        devices.push(Device{header: header, bus: bus, slot: slot, function: 0});
     }
 }
 
@@ -168,7 +172,8 @@ fn get_devices() -> Vec<Device> {
 pub fn print_devices() {
     for device in get_devices() {
         let h = device.header.common;
-        println!("{} {} {:x} {:x} {}", h.class_code, h.subclass, h.vendor_id, h.device_id,
-            h.header_type);
+        if h.class_code == 2 {
+            println!("{}:{}:{} class: {}-{} vendor: {:x} device_id: {:x}", device.bus, device.slot, device.function, h.class_code, h.subclass, h.vendor_id, h.device_id)
+        }
     }
 }
