@@ -117,7 +117,7 @@ fn get_header(bus: u8, slot: u8, func: u8) -> Option<Header> {
     for (i, line) in (4..).zip(specific_buffer.as_mut()) {
         *line = config_read(bus, slot, func, i * 4);
     }
-    let specific = match common.header_type {
+    let specific = match common.header_type & 0x7F {
         0 => HeaderType::Standard(unsafe{mem::transmute(specific_buffer)}),
         1 => HeaderType::Pci2PciBridge(unsafe{mem::transmute(specific_buffer)}),
         typ => {println!("unknown type {}", typ); HeaderType::Other},
@@ -131,7 +131,7 @@ fn add_devices_on_bus(devices: &mut Vec<Device>, bus: u8) {
         get_header(bus, slot as u8, 0).map(|h| (slot as u8, h)))
     {
         // check if multi function device
-        if header.common.header_type == 0x80 {
+        if header.common.header_type & 0x80 != 0 {
             for h in (1..8).filter_map(|func| get_header(bus, slot, func)) {
                 devices.push(Device{header: h})
             }
