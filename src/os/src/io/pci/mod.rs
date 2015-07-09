@@ -85,16 +85,18 @@ struct Device {
     header: Header,
 }
 
-fn config_read(bus: u8, slot: u8, func: u8, offset: u8) -> u32 {
+fn pci_address(bus: u8, slot: u8, func: u8, offset: u8) -> u32 {
     let bus = bus as u32;
     let slot = slot as u32;
     let func = func as u32;
     let offset = offset as u32;
 
-    let address = bus << 16 | slot << 11 | func << 8 | (offset & 0xfc) | 0x80000000;
+    bus << 16 | slot << 11 | func << 8 | (offset & 0xfc) | 0x80000000
+}
 
+fn config_read(bus: u8, slot: u8, func: u8, offset: u8) -> u32 {
     unsafe {
-        CONFIG_ADDRESS.out32(address);
+        CONFIG_ADDRESS.out32(pci_address(bus, slot, func, offset));
         CONFIG_DATA.in32()
     }
 }
