@@ -171,8 +171,25 @@ fn get_devices() -> Vec<Device> {
     devices
 }
 
+fn init_devices() -> Vec<Device> {
+    let mut devices = get_devices();
+    for device in &mut devices {
+        let common = &mut device.header.common;
+        if common.class_code == 0x02 && common.vendor_id == 0x10ec && common.device_id == 0x8139 {
+            // Rtl8139 nic -> enable bus mastering
+            common.command |= 0x4;
+            unsafe {
+                CONFIG_ADDRESS.out32(pci_address(device.bus, device.slot, device.function, 4));
+                CONFIG_DATA.out16(common.command);
+            }
+            println!("enabled bus mastering for Rtl8139");
+        }
+    }
+    devices
+}
+
 pub fn print_devices() {
-    for device in get_devices() {
+    for device in init_devices() {
         let h = device.header.common;
         if h.class_code == 2 {
             println!("{}:{}:{} class: {}-{} vendor: {:x} device_id: {:x}", device.bus, device.slot, device.function, h.class_code, h.subclass, h.vendor_id, h.device_id)
