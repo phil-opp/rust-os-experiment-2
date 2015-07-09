@@ -39,7 +39,7 @@ unsafe fn send_eoi(interrupt_number: isize) {
     let master_port = Port::new(0x20);
     let slave_port = Port::new(0xA0);
 
-    unsafe fn send_eoi(mut port: Port) {port.out_byte(0x20)}
+    unsafe fn send_eoi(mut port: Port) {port.out8(0x20)}
 
     match interrupt_number {
         i if i >= 40 => {

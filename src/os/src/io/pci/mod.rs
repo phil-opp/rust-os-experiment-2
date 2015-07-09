@@ -94,8 +94,8 @@ fn config_read(bus: u8, slot: u8, func: u8, offset: u8) -> u32 {
     let address = bus << 16 | slot << 11 | func << 8 | (offset & 0xfc) | 0x80000000;
 
     unsafe {
-        CONFIG_ADDRESS.out_double(address);
-        CONFIG_DATA.in_double()
+        CONFIG_ADDRESS.out32(address);
+        CONFIG_DATA.in32()
     }
 }
 

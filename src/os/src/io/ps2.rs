@@ -8,7 +8,7 @@ pub unsafe fn init() {
 
     fn wait_for_free_input_buffer() {
         loop {
-            let status = unsafe{STATUS_PORT.in_byte()};
+            let status = unsafe{STATUS_PORT.in8()};
             if status & 0b10 == 0 {
                 break; // input buffer is free
             }
@@ -17,7 +17,7 @@ pub unsafe fn init() {
 
     fn wait_for_filled_output_buffer() {
         loop {
-            let status = unsafe{STATUS_PORT.in_byte()};
+            let status = unsafe{STATUS_PORT.in8()};
             if status & 0b01 == 1 {
                 break; // output buffer is filled
             }
@@ -26,17 +26,17 @@ pub unsafe fn init() {
 
     unsafe fn send_command(command: u8) {
         wait_for_free_input_buffer();
-        COMMAND_PORT.out_byte(command)
+        COMMAND_PORT.out8(command)
     }
 
     unsafe fn send_data(data: u8) {
         wait_for_free_input_buffer();
-        DATA_PORT.out_byte(data)
+        DATA_PORT.out8(data)
     }
 
     unsafe fn read_data() -> u8 {
         wait_for_filled_output_buffer();
-        DATA_PORT.in_byte()
+        DATA_PORT.in8()
     }
 
     // disable devices
@@ -44,7 +44,7 @@ pub unsafe fn init() {
     send_command(0xA7);
 
     // flush output buffer
-    DATA_PORT.in_byte();
+    DATA_PORT.in8();
 
     // get the configuration byte
     send_command(0x20);
