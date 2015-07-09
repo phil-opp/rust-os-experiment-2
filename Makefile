@@ -13,19 +13,20 @@ rustos := build/isofiles/boot/rustos.bin
 rustos-debug := build/isofiles/boot/rustos.debug
 grub_cfg := build/isofiles/boot/grub/grub.cfg
 iso := build/rustos.iso
+qemu_args := -net nic,model=rtl8139 -net user
 
 build: debug = debug
 build: cargo_command = cargo rustc -- -C relocation-model=pic
 build: iso
 
 run: build
-	@qemu-system-$(arch) -s -hda $(iso)
+	@qemu-system-$(arch) -s -hda $(iso) $(qemu_args)
 
 debug: build
-	@qemu-system-$(arch) -s -S -hda $(iso)
+	@qemu-system-$(arch) -s -S -hda $(iso) $(qemu_args)
 
 release-run: release
-	@qemu-system-$(arch) -hda $(iso)
+	@qemu-system-$(arch) -hda $(iso) $(qemu_args)
 
 release: cargo_command = cargo rustc --release -- -C relocation-model=pic
 release: debug = release
