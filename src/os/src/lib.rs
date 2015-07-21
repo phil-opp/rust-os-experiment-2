@@ -1,6 +1,6 @@
 #![feature(lang_items, asm, const_fn)]
 #![feature(optin_builtin_traits)]
-#![feature(core_intrinsics, box_raw, ptr_as_ref, fnbox)]
+#![feature(core_intrinsics, box_raw, ptr_as_ref, fnbox, vec_push_all)]
 #![feature(spsc_queue, mpsc_queue)]
 
 pub use init::MultibootHeader;
@@ -18,6 +18,7 @@ pub mod global; // TODO make private
 mod thread;
 mod task;
 pub mod interrupts;
+pub mod net;
 
 pub unsafe fn init(multiboot: init::MultibootHeader) {
     init::init(multiboot);
