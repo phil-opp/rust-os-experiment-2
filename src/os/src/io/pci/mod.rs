@@ -1,6 +1,8 @@
 use super::arch::Port;
 use std::mem;
 
+mod rtl8139;
+
 const CONFIG_ADDRESS: Port = Port::new(0xCF8);
 const CONFIG_DATA: Port = Port::new(0xCFC);
 
@@ -183,6 +185,12 @@ fn init_devices() -> Vec<Device> {
                 CONFIG_DATA.out16(common.command);
             }
             println!("enabled bus mastering for Rtl8139");
+            let specific = match device.header.specific {
+                HeaderType::Standard(ref specific) => specific,
+                _ => unreachable!(),
+            };
+
+            rtl8139::init((specific.base_addresses[0] & 0xFFFFFFFC) as u16);
         }
     }
     devices
